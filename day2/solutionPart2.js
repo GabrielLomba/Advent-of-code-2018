@@ -23,7 +23,7 @@ function findCommonsLettersBetweenCorrectBoxes(input) {
   }
 }
 
-const rawInput = fs.readFileSync(`${__dirname}/inputPart2.txt`);
+const rawInput = fs.readFileSync(`${__dirname}/input.txt`);
 
 const parsedInput = rawInput.toString().split("\n");
 

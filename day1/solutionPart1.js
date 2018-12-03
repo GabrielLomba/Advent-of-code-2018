@@ -10,7 +10,7 @@ function calculateFinalFrequency(input) {
   return freq;
 }
 
-const rawInput = fs.readFileSync(`${__dirname}/inputPart1.txt`);
+const rawInput = fs.readFileSync(`${__dirname}/input.txt`);
 
 const parsedInput = rawInput.toString().split("\n");
 

@@ -31,7 +31,7 @@ function calculateIdChecksum(input) {
   return contains2Letters * contains3Letters;
 }
 
-const rawInput = fs.readFileSync(`${__dirname}/inputPart1.txt`);
+const rawInput = fs.readFileSync(`${__dirname}/input.txt`);
 
 const parsedInput = rawInput.toString().split("\n");
 
