@@ -1,56 +1,12 @@
-const fs = require("fs");
+const {
+  GUARD_TYPE,
+  FALLS_ASLEEP_TYPE,
+  WAKES_UP_TYPE,
+  getParsedInput
+} = require("./inputParser");
 
-const DATE_TIME_REGEX = /\[(\d\d\d\d)-(\d\d)-(\d\d)\s(\d\d):(\d\d)\]/;
-const GUARD_ID_REGEX = /#(\d+)\s/;
-
-const GUARD_TYPE = 0;
-const FALLS_ASLEEP_TYPE = 1;
-const WAKES_UP_TYPE = 2;
-
-function getEntryType(entry) {
-  if (entry.indexOf("Guard") != -1) {
-    return GUARD_TYPE;
-  } else if (entry.indexOf("falls") != -1) {
-    return FALLS_ASLEEP_TYPE;
-  } else {
-    return WAKES_UP_TYPE;
-  }
-}
-
-function buildDateFromEntry(entry) {
-  const { year, month, date, hour, minute } = entry;
-
-  return new Date(year, month, date, hour, minute);
-}
-
-function getParsedInput(input) {
-  const parsedInput = input.map(entry => {
-    const groups = DATE_TIME_REGEX.exec(entry);
-    const [, year, month, date, hour, minute] = groups.map(Number);
-    const type = getEntryType(entry);
-    const id = type == GUARD_TYPE ? GUARD_ID_REGEX.exec(entry)[1] : null;
-
-    return {
-      id,
-      type,
-      year,
-      month,
-      date,
-      hour,
-      minute
-    }
-  })
-
-  return parsedInput.sort((a, b) => {
-    const aDate = buildDateFromEntry(a);
-    const bDate = buildDateFromEntry(b);
-
-    return aDate.getTime() - bDate.getTime();
-  });
-}
-
-function findBestGuardMinuteCombination(input) {
-  const parsedInput = getParsedInput(input);
+function findBestGuardMinuteCombination() {
+  const parsedInput = getParsedInput();
 
   const guardsDataMap = new Map();
 
@@ -62,9 +18,9 @@ function findBestGuardMinuteCombination(input) {
         currentGuard = entry.id;
 
         if (guardsDataMap.has(currentGuard)) {
-          ++guardsDataMap.get(currentGuard).totalTimes;
+          ++guardsDataMap.get(currentGuard).totalShifts;
         } else {
-          guardsDataMap.set(currentGuard, { minutesAsleep: new Map(), totalTimes: 1 });
+          guardsDataMap.set(currentGuard, { minutesAsleep: new Map(), totalShifts: 1 });
         }
         break;
 
@@ -90,7 +46,7 @@ function findBestGuardMinuteCombination(input) {
 
   for (const [id, data] of guardsDataMap.entries()) {
     for (const [minute, asleepTimes] of data.minutesAsleep.entries()) {
-      const ratio = asleepTimes / data.totalTimes;
+      const ratio = asleepTimes / data.totalShifts;
 
       if (ratio > betterRatio) {
         betterRatio = ratio;
@@ -102,8 +58,4 @@ function findBestGuardMinuteCombination(input) {
   return result;
 }
 
-const rawInput = fs.readFileSync(`${__dirname}/input.txt`);
-
-const parsedInput = rawInput.toString().split("\n");
-
-console.log(findBestGuardMinuteCombination(parsedInput));
+console.log(findBestGuardMinuteCombination());
