@@ -12,6 +12,7 @@ function findMostAsleepGuardMinuteCombination() {
 
   let lastFellAsleepMinute;
   let currentGuard;
+  let mostAsleepGuard;
   for (const entry of parsedInput) {
     switch (entry.type) {
       case GUARD_TYPE:
@@ -33,17 +34,14 @@ function findMostAsleepGuardMinuteCombination() {
           const timesAsleep = data.minutesAsleep.get(i) || 0;
           data.minutesAsleep.set(i, timesAsleep + 1);
         }
+
+        if (!mostAsleepGuard || data.totalMinutesAsleep > mostAsleepGuard.totalMinutesAsleep) {
+          mostAsleepGuard = Object.assign({ id: currentGuard }, data);
+        }
         break;
 
       default:
         throw new Error(`Invalid entry type: ${type}`);
-    }
-  }
-
-  let mostAsleepGuard;
-  for (const [id, data] of guardsDataMap.entries()) {
-    if (!mostAsleepGuard || data.totalMinutesAsleep > mostAsleepGuard.totalMinutesAsleep) {
-      mostAsleepGuard = Object.assign({ id }, data);
     }
   }
 
