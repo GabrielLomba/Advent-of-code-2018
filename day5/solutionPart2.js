@@ -12,10 +12,13 @@ function findShortestPolymer(input) {
   for (const unit of unitsSet) {
     const newUnits = units.slice().filter(u => u != unit && u != unit.toUpperCase());
 
-    for (let i = 1; i < newUnits.length; ++i) {
+    let i = 1;
+    while (i < newUnits.length) {
       if (unitsReact(newUnits[i - 1], newUnits[i])) {
         newUnits.splice(i - 1, 2);
-        i = Math.max(0, i - 2);
+        i = Math.max(1, i - 1);
+      } else {
+        ++i;
       }
     }
 
